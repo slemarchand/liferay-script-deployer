@@ -6,7 +6,7 @@ Execute any script file just dropping it into the deploy directory.
 
 ## Compatibility
 
-Liferay versions `7.1`, `7.2`, `7.3` and `7.4` are supported (both for `CE` and `DXP`).
+Liferay versions `7.0`, `7.1`, `7.2`, `7.3` and `7.4` are supported (both for `CE` and `DXP`).
 
 ## Installation
 
