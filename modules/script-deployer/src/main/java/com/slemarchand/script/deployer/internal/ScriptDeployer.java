@@ -4,10 +4,10 @@ import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.io.unsync.UnsyncPrintWriter;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.scripting.Scripting;
 import com.liferay.portal.kernel.scripting.ScriptingException;
 import com.liferay.portal.kernel.scripting.ScriptingExecutor;
 import com.liferay.portal.kernel.util.UnsyncPrintWriterPool;
-import com.liferay.portal.scripting.ScriptingExecutorRegistry;
 import com.liferay.portal.util.PropsValues;
 
 import java.io.File;
@@ -76,18 +76,19 @@ public class ScriptDeployer {
 	
 	private void _processFile(File file) throws IOException, ScriptingException {
 		
-		String language =_getScriptLanguage(file);
+		String language = _getScriptLanguage(file);
 		
 		if(language!=null) {
 			
-			ScriptingExecutor scriptingExecutor = _scriptingExecutorRegistry.getScriptingExecutor(language);
+			boolean isSupportedLanguage = _scripting.getSupportedLanguages().contains(language);
 			
-			if(scriptingExecutor != null) {
+			if(isSupportedLanguage) {
+				
+				String content = _getContent(file);
 				
 				Set<String> allowedClasses = null;
 				Map<String, Object> inputObjects = new HashMap<>();
-				Set<String> outputNames = null;
-				
+			
 				UnsyncByteArrayOutputStream unsyncByteArrayOutputStream =
 						new UnsyncByteArrayOutputStream();
 
@@ -96,7 +97,7 @@ public class ScriptDeployer {
 
 				inputObjects.put("out", unsyncPrintWriter);
 				
-				scriptingExecutor.eval(allowedClasses, inputObjects, outputNames, file);
+				_scripting.exec(allowedClasses, inputObjects, language, content);
 				
 				unsyncPrintWriter.flush();
 				
@@ -109,6 +110,13 @@ public class ScriptDeployer {
 				file.delete();
 			}
 		}
+	}
+
+	private String _getContent(File file) throws IOException {
+		Scanner scanner = new Scanner(Paths.get(file.toURI()), StandardCharsets.UTF_8.name());
+		String content = scanner.useDelimiter("\\A").next();
+		scanner.close();
+		return content;
 	}
 
 	private String _getScriptLanguage(File file) {
@@ -131,7 +139,7 @@ public class ScriptDeployer {
 	}
 
 	@Reference
-	private ScriptingExecutorRegistry _scriptingExecutorRegistry;
+	private Scripting _scripting;
 	
 	private DirectoryWatcher _fileWatcher;
 	
@@ -141,6 +149,7 @@ public class ScriptDeployer {
 		
 		 Map<String, String> map = new HashMap<>();
 		 
+		 map.put("groovy", "groovy");
 		 map.put("py", "python");
 		 map.put("rb", "ruby");
 		 map.put("js", "javascript");
