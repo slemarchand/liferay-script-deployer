@@ -36,7 +36,7 @@ public abstract class DirectoryWatcher extends Thread {
     @Override
     public void run() {
         try (WatchService watcher = FileSystems.getDefault().newWatchService()) {
-            Path path = _directory.toPath().getParent();
+            Path path = _directory.toPath();
             path.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
             while (!isStopped()) {
                 WatchKey key;
@@ -56,7 +56,7 @@ public abstract class DirectoryWatcher extends Thread {
                         continue;
                     } else if (kind == java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY
                             || kind == java.nio.file.StandardWatchEventKinds.ENTRY_CREATE) {
-                        doOnChange(filename.toFile());
+                        doOnChange(new File(_directory,  filename.toString()));
                     }
                     boolean valid = key.reset();
                     if (!valid) { break; }

@@ -48,7 +48,7 @@ public class ScriptDeployer {
 				}
 			}
 			
-			_fileWatcher = new DirectoryWatcher(autoDeployDir) {
+			_directoryWatcher = new DirectoryWatcher(autoDeployDir) {
 				
 				@Override
 				public void doOnChange(File file) {
@@ -60,7 +60,7 @@ public class ScriptDeployer {
 				}
 			};		
 			
-			_fileWatcher.start();
+			_directoryWatcher.start();
 		}
 	}
 	
@@ -69,8 +69,8 @@ public class ScriptDeployer {
 		
 		_log.debug("deactivate()");
 		
-		if(_fileWatcher != null) {
-			_fileWatcher.stopThread();
+		if(_directoryWatcher != null) {
+			_directoryWatcher.stopThread();
 		}
 	}
 	
@@ -141,7 +141,7 @@ public class ScriptDeployer {
 	@Reference
 	private Scripting _scripting;
 	
-	private DirectoryWatcher _fileWatcher;
+	private DirectoryWatcher _directoryWatcher;
 	
 	private final static Map<String, String> _EXTENSION_LANGUAGE_MAP;
 	
