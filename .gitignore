@@ -1,0 +1,5 @@
+gradle-local.properties
+.gradle
+.settings
+.classpath
+.project
