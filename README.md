@@ -10,7 +10,7 @@ Liferay versions `7.1`, `7.2`, `7.3` and `7.4` are supported (both for `CE` and 
 
 ## Installation
 
-Get the `script-deployer.jar` file from the [release page](https://github.com/slemarchand/lfr-script-deployer/releases) and just drop it into your `$LIFERAY_HOME/deploy` directory.
+Get the `com.slemarchand.script.deployer.jar` file from the [release page](https://github.com/slemarchand/lfr-script-deployer/releases) and just drop it into your `$LIFERAY_HOME/deploy` directory.
 
 ## Usage
 

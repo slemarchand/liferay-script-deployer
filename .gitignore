@@ -3,3 +3,5 @@ gradle-local.properties
 .settings
 .classpath
 .project
+build
+bundles
